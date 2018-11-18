@@ -1,0 +1,22 @@
+.listArea {
+  height: 600px;
+  overflow: auto;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.isRentaled {
+  background: rgb(102, 109, 103); /* green */
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+.hide-element-description {
+  padding: 10px;
+}

@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>logout</mat-icon>
+      <span>ログアウト</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>管理画面</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<app-list></app-list>
+<router-outlet></router-outlet>

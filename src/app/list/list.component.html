@@ -1,0 +1,63 @@
+<h2>BOOKS</h2>
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="タイトルでフィルター" />
+</mat-form-field>
+
+<div class="listArea mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>No</th>
+      <td mat-cell *matCellDef="let element">{{ element[0].id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>タイトル</th>
+      <td mat-cell *matCellDef="let element">{{ element[0]?.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="rentalUserId">
+      <th mat-header-cell *matHeaderCellDef>状態</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element[1]?.userName !== null ? "貸出中" : "貸出可能" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef>開始日</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element[0]?.startDate !== null ? element[1]?.startDate : "―" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef>返却予定日</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element[0]?.dueDate !== null ? element[0]?.dueDate : "ー" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div
+          class="example-element-detail"
+          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+        >
+          <div class="hide-element-description">
+            {{ element[1]?.userName !== null ? "貸出中：" + element[1]?.userName : "貸出可能" }}
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: displayedColumns"
+      class="example-expanded-row"
+      [class.example-expanded-row]="expandedElement == element"
+      (click)="expandedElement = element"
+    ></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+</div>
