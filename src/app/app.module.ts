@@ -45,9 +45,10 @@ import {
 } from "@angular/material";
 import { MatTableModule } from "@angular/material/table";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BookdetailComponent } from './bookdetail/bookdetail.component';
 
 @NgModule({
-  declarations: [AppComponent, ListComponent],
+  declarations: [AppComponent, ListComponent, BookdetailComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

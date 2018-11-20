@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { ListService } from "../service/list.service";
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { MatTableDataSource } from "@angular/material";
+import { CommonService } from "../service/common.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-list",
@@ -15,14 +17,31 @@ import { MatTableDataSource } from "@angular/material";
     ])
   ]
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   items: any[][];
-  dataSource: MatTableDataSource<any>;
+  @Input() dataSource: MatTableDataSource<any>;
   displayedColumns = ["id", "title", "rentalUserId", "startDate", "dueDate"];
   expandedElement: MatTableDataSource<any>;
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty("detailRow");
 
-  constructor(private listService: ListService) {}
+  /**
+   * CommonService の変数の参照を取得するプロパティ
+   *
+   * @type {String}
+   * @memberof Sample1Component
+   */
+  public serviceProp: String = "Initialized by Sample1Component";
+
+  /**
+   * subscribe を保持するための Subscription
+   *
+   * @private
+   * @type {Subscription}
+   * @memberof Sample1Component
+   */
+  private subscription: Subscription;
+
+  constructor(private listService: ListService, private commonService: CommonService) {}
 
   ngOnInit() {
     this.listService.getAll().subscribe(data => {
@@ -30,17 +49,28 @@ export class ListComponent implements OnInit {
       this.dataSource.filterPredicate = (data, filter: string) =>
         data[0].title.indexOf(filter) != -1;
     });
+    this.subscription = this.commonService.sharedDataSource$.subscribe(msg => {
+      console.log("[Sample1Component] shared data updated.");
+      this.serviceProp = msg;
+    });
+  }
+
+  /**
+   * コンポーネント終了時の処理
+   *
+   * @memberof Sample1Component
+   */
+  ngOnDestroy() {
+    //  リソースリーク防止のため CommonService から subcribe したオブジェクトを破棄する
+    this.subscription.unsubscribe();
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  /**
-   * expand collapse a row
-   * @param row
-   */
-  toggleRow(row) {
-    this.expandedElement === row ? null : row;
+  onClicSendMessage() {
+    // CommonService のデータ更新を行う
+    this.commonService.onNotifySharedDataChanged("Updated by Sample1Component.");
   }
 }
